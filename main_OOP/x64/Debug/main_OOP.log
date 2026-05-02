@@ -1,0 +1,7 @@
+﻿  main_OOP.cpp
+D:\Dowloads\main_OOP\main_OOP.cpp(68,52): warning C4305: 'return': truncation from 'double' to 'float'
+D:\Dowloads\main_OOP\main_OOP.cpp(69,52): warning C4305: 'return': truncation from 'double' to 'float'
+D:\Dowloads\main_OOP\main_OOP.cpp(87,47): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Dowloads\main_OOP\main_OOP.cpp(88,39): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+D:\Dowloads\main_OOP\main_OOP.cpp(89,58): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  main_OOP.vcxproj -> D:\Dowloads\main_OOP\x64\Debug\main_OOP.exe
