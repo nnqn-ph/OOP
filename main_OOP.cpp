@@ -101,7 +101,7 @@ public:
         float conNo = round(thueSauGiam()) - round(soTienDaNop); // tính số tiền còn nợ sau khi nộp thuế
 
         if (conNo > 0) {
-            cout << termcolor::on_red << "Còn nợ: " << termcolor::bold << conNo << " đồng" << termcolor::reset << endl; // nếu còn nợ thì cập nhật số tiền nợ
+            cout << termcolor::on_red << "Còn nợ: " << termcolor::bold << (long long)conNo << " đồng" << termcolor::reset << endl; // nếu còn nợ thì cập nhật số tiền nợ
             soThueNo = conNo;
         }
         else if (conNo == 0) {
@@ -109,7 +109,7 @@ public:
             soThueNo = 0;
         }
         else {
-            float du = abs(conNo);
+            float du = (long long)abs(conNo);
             cout << termcolor::cyan << "Nộp dư: " << termcolor::bold << du << " đồng (đã hoàn trả)!" << termcolor::reset << endl; // nếu nộp dư thì hoàn trả
             soThueNo = 0;
         }
@@ -381,14 +381,18 @@ int main() {
 
     // menu chính để chọn loại hình đất
     do {
-        cout << termcolor::cyan << "\n===== MENU =====\n" << termcolor::reset; 
-        cout << termcolor::cyan << "Chọn loại hình: " << termcolor::reset << endl;
-        cout << "1. Hình tròn\n";
-        cout << "2. Hình chữ nhật\n";
-        cout << "3. Tam giác\n";
-        cout << "0. Thoát\n";
-        cout << termcolor::yellow << "Chọn: " << termcolor::reset;
-        cin >> choice;
+        while (true) {
+            cout << termcolor::cyan << "\n===== MENU =====\n" << termcolor::reset; 
+            cout << termcolor::cyan << "Chọn loại hình: " << termcolor::reset << endl;
+            cout << "1. Hình tròn\n";
+            cout << "2. Hình chữ nhật\n";
+            cout << "3. Tam giác\n";
+            cout << "0. Thoát\n";
+            cout << termcolor::yellow << "Chọn: " << termcolor::reset;
+            cin >> choice;
+            if (choice >= 0 && choice <= 3) break; // Nhập đúng thì thoát vòng lặp này
+            cout << termcolor::on_red << "Lựa chọn không hợp lệ! Vui lòng chọn lại (0-3)." << termcolor::reset << endl;
+        }
 
         if (choice == 0) {
             cout << termcolor::on_red << "Đã thoát ứng dụng!" << termcolor::reset;
@@ -410,12 +414,16 @@ int main() {
 
         // nhập thông tin khu vực
         int khuVuc;
-        cout << termcolor::cyan << "Chọn khu vực: " << termcolor::reset << endl;
-        cout << "1: nông thôn" << endl;
-        cout << "2: thành thị" << endl;
-        cout << termcolor::yellow << "Chọn: " << termcolor::reset;
-        cin >> khuVuc;
-        cin.ignore();
+        while (true) {
+            cout << termcolor::cyan << "Chọn khu vực: " << termcolor::reset << endl;
+            cout << "1: nông thôn" << endl;
+            cout << "2: thành thị" << endl;
+            cout << termcolor::yellow << "Chọn: " << termcolor::reset;
+            cin >> khuVuc;
+            cin.ignore();
+            if (khuVuc == 1 || khuVuc == 2) break;
+            cout << termcolor::on_red << "Lỗi: Chỉ được chọn 1 hoặc 2!" << termcolor::reset << endl;
+        }
 
         cout << termcolor::green;
         switch (khuVuc) {
@@ -431,13 +439,30 @@ int main() {
         // thông tin mục đích sử dụng
         int md;
         string mucDich;
-        cout << termcolor::cyan << "Chọn mục đích sử dụng:\n" << termcolor::reset;
-        cout << "1. Nhà ở\n";
-        cout << "2. Kinh doanh\n";
-        cout << "3. Nông nghiệp\n";
-        cout << "4. Công nghiệp\n";
-        cout << termcolor::yellow << "Chọn: " << termcolor::reset;
-        cin >> md;
+        while (true) {
+            cout << termcolor::cyan << "Chọn mục đích sử dụng:\n" << termcolor::reset;
+            cout << "1. Nhà ở\n";
+            cout << "2. Kinh doanh\n";
+            cout << "3. Nông nghiệp\n";
+            cout << "4. Công nghiệp\n";
+            cout << termcolor::yellow << "Chọn: " << termcolor::reset;
+
+            // Kiểm tra đầu vào có phải là số và nằm trong khoảng 1-4 không
+            if (cin >> md && md >= 1 && md <= 4) {
+                // Nhập đúng: Gán giá trị và thoát vòng lặp
+                if (md == 1) mucDich = "nha_o";
+                else if (md == 2) mucDich = "kinh_doanh";
+                else if (md == 3) mucDich = "nong_nghiep";
+                else if (md == 4) mucDich = "cong_nghiep";
+                break;
+            }
+            else {
+                // Nhập sai: Thông báo và xóa bộ nhớ đệm để nhập lại
+                cout << termcolor::on_red << "Lỗi: Chỉ được chọn 1, 2, 3 hoặc 4!" << termcolor::reset << endl;
+                cin.clear(); // Xóa trạng thái lỗi của cin
+                cin.ignore(1000, '\n'); // Loại bỏ các ký tự thừa trong bộ đệm
+            }
+        }
 
         bool validMucDich = true; // kiểm tra mục đích sử dụng hợp lệ
 
