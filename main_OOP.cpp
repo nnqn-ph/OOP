@@ -22,7 +22,7 @@ using namespace std;
 // === class HinhHoc
 class HinhHoc {
 protected:
-    int khuVuc; // 1: nông thôn, 2: thành thị
+    int khuVuc; // nông thôn, thành thị
     string mucDichSuDung; // nhà ở, kinh doanh, nông nghiệp, công nghiệp
     float soThueNo; // số tiền thuế còn nợ sau khi nộp
 public:
@@ -539,53 +539,105 @@ int main() {
         if (h == nullptr) continue; // nếu hình học không được tạo (do lỗi), quay lại menu
         ds.push_back(h); // lưu hình học vào danh sách
 
-        // in kết quả đã nhập
-        tabulate::Table output;
+        bool hoanTatLuotNay = false;
+        while (!hoanTatLuotNay) {
+            // in kết quả đã nhập
+            tabulate::Table output;
 
-        output.add_row({ "Loại", h->getLoaiHinh() });
-        output.add_row({ "Diện tích", formatNum(h->TinhDienTich()) });
-        output.add_row({ "Chu vi", formatNum(h->TinhChuVi()) });
-        output.add_row({ "Thuế trước giảm", formatNum(round(h->TinhThue())) + " đồng" });
-        output.add_row({ "Giảm thuế", formatNum(round(h->giamThue())) + " đồng" });
-        output.add_row({ "Lý do giảm", h->chiTietGiamThue() });
-        output.add_row({ "Thuế sau giảm", formatNum(round(h->thueSauGiam())) + " đồng" });
-		// định dạng bảng kết quả
-        output.format()
-            .multi_byte_characters(true)
-            .border_left(" ")
-            .border_right(" ")
-            .corner(" ")
-            .border_left_color(tabulate::Color::yellow)
-            .border_right_color(tabulate::Color::yellow)
-            .border_top_color(tabulate::Color::yellow)
-            .border_bottom_color(tabulate::Color::yellow);
-		// định dạng cột
-        output.column(0).format().width(20).background_color(tabulate::Color::magenta);
-        output.column(1).format().width(35) // Tăng độ rộng lên một chút cho nội dung văn bản
-            .font_align(tabulate::FontAlign::left) // Đổi sang căn lề trái để đọc lý do dễ hơn
-            .font_style({ tabulate::FontStyle::bold })
-            .font_color(tabulate::Color::magenta)
-            .background_color(tabulate::Color::white);
+            output.add_row({ "Loại", h->getLoaiHinh() });
+            output.add_row({ "Diện tích", formatNum(h->TinhDienTich()) });
+            output.add_row({ "Chu vi", formatNum(h->TinhChuVi()) });
+            output.add_row({ "Thuế trước giảm", formatNum(round(h->TinhThue())) + " đồng" });
+            output.add_row({ "Giảm thuế", formatNum(round(h->giamThue())) + " đồng" });
+            output.add_row({ "Lý do giảm", h->chiTietGiamThue() });
+            output.add_row({ "Thuế sau giảm", formatNum(round(h->thueSauGiam())) + " đồng" });
+            // định dạng bảng kết quả
+            output.format()
+                .multi_byte_characters(true)
+                .border_left(" ")
+                .border_right(" ")
+                .corner(" ")
+                .border_left_color(tabulate::Color::yellow)
+                .border_right_color(tabulate::Color::yellow)
+                .border_top_color(tabulate::Color::yellow)
+                .border_bottom_color(tabulate::Color::yellow);
+            // định dạng cột
+            output.column(0).format().width(20).background_color(tabulate::Color::magenta);
+            output.column(1).format().width(35) 
+                .font_align(tabulate::FontAlign::left) 
+                .font_style({ tabulate::FontStyle::bold })
+                .font_color(tabulate::Color::magenta)
+                .background_color(tabulate::Color::white);
 
-        // Lưu ý: vị trí hàng "Thuế sau giảm" bây giờ là hàng số 6 (index 6)
-        output.row(6).format().font_style({ tabulate::FontStyle::bold });
+            // Lưu ý: vị trí hàng "Thuế sau giảm" bây giờ là hàng số 6 (index 6)
+            output.row(6).format().font_style({ tabulate::FontStyle::bold });
 
-        cout << output << endl;
+            cout << output << endl;
 
-        // Nhập số tiền nộp thuế
-        cout << termcolor::cyan << endl << endl << "===== THÔNG TIN THUẾ ĐẤT =====" << termcolor::reset << endl;
-        float tienNop;
-        cout << termcolor::yellow << "Nhập số tiền nộp thuế (đồng): " << termcolor::reset;
-        cin >> tienNop;
+            // Nhập số tiền nộp thuế
+            cout << termcolor::cyan << endl << endl << "===== THÔNG TIN THUẾ ĐẤT =====" << termcolor::reset << endl;
+            float tienNop;
+            cout << termcolor::yellow << "Nhập số tiền nộp thuế (đồng): " << termcolor::reset;
+            cin >> tienNop;
 
-        h->nopThue(tienNop); // cập nhật số tiền nợ sau khi nộp thuế
+            h->nopThue(tienNop); // cập nhật số tiền nợ sau khi nộp thuế
 
-        // in kết quả sau khi nộp thuế
-        /*
-        printRow("Còn nợ", formatNum(h->conNoThue()) + " đồng");
-        printRow("Trạng thái", h->conNoThue() > 0 ? "Còn nợ" : "Đã nộp đủ thuế");
-        printLine();
-        */
+            // in kết quả sau khi nộp thuế
+            /*
+            printRow("Còn nợ", formatNum(h->conNoThue()) + " đồng");
+            printRow("Trạng thái", h->conNoThue() > 0 ? "Còn nợ" : "Đã nộp đủ thuế");
+            printLine();
+            */
+
+            // tính năng cập nhật thông tin
+            string cmd;
+            cout << termcolor::bold << "\nNhấn Enter để tiếp tục hoặc nhập u để cập nhật: " << termcolor::reset;
+            cin.ignore(1000, '\n'); // Dọn bộ đệm
+            getline(cin, cmd);
+
+            if (cmd == "u" || cmd == "U") { 
+                cout << termcolor::cyan << "\n=== CẬP NHẬT THÔNG TIN ===" << termcolor::reset << endl;
+                cout <<"1. Sửa Khu vực" << endl
+                    << "2. Sửa Mục đích" << endl
+                    << "3. Nhập lại tiền thuế" << endl;
+				cout << termcolor::yellow << "Chọn: " << termcolor::reset;
+                int editOption;
+                cin >> editOption;
+
+                if (editOption == 1) {
+                    int kv_new;
+                    while (true) {
+                        cout << termcolor::cyan << "Nhập lại Khu vực" << termcolor::reset << endl;
+						cout << "1. nông thôn" << endl
+							<< "2. thành thị" << endl;
+						cout << termcolor::yellow << "Chọn: " << termcolor::reset;
+                        cin >> kv_new;
+                        if (kv_new == 1 || kv_new == 2) { h->setKhuVuc(kv_new); break; }
+                    }
+                }
+                else if (editOption == 2) {
+                    int md_new;
+                    while (true) {
+                        cout << termcolor::cyan << "Nhập lại Mục đích" << termcolor::reset << endl; 
+                        cout << "1. Nhà ở" << endl
+                             << "2. Kinh doanh" << endl
+                             << "3. Nông nghiệp" << endl
+                             << "4. Công nghiệp" << endl;
+						cout <<termcolor::yellow <<"Chọn: " << termcolor::reset;
+                        cin >> md_new;
+                        if (md_new >= 1 && md_new <= 4) {
+                            string listMD[] = { "", "nha_o", "kinh_doanh", "nong_nghiep", "cong_nghiep" };
+                            h->setMDSD(listMD[md_new]); break;
+                        }
+                    }
+                }
+                else if (editOption == 3) {                 
+                }
+            }
+            else {
+                hoanTatLuotNay = true; // Thoát vòng lặp để chọn hình mới
+            }
+        }
 
     } while (true); // lặp lại menu cho đến khi người dùng chọn thoát
 
